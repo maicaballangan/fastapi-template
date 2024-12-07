@@ -1,0 +1,33 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+exclude: |
+  (?x)^(
+    data/.*|
+    app/email-templates/.*|
+  )$
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-toml
+  - repo: https://github.com/asottile/reorder_python_imports
+    rev: v3.14.0
+    hooks:
+    - id: reorder-python-imports
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.6.4
+    hooks:
+      - id: ruff-format # formatter
+        types_or: [python, toml]
+      - id: ruff # linter
+        types_or: [python, toml]
+        args: [ --fix, --show-fixes ]
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.1.0
+    hooks:
+      - id: codespell
+        files: ^.*\.(py|c|h|md|rst|yml)$
+        args: ["--ignore-words", ".codespellignore" ]
+ci:
+  autofix_commit_msg: 🎨 [pre-commit.ci] Auto format from pre-commit.com hooks
+  autoupdate_commit_msg: ⬆ [pre-commit.ci] pre-commit autoupdate

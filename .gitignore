@@ -1,5 +1,6 @@
 .vscode
 __pycache__
+**/__pycache__/
 app.egg-info
 *.pyc
 .mypy_cache
