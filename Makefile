@@ -24,7 +24,9 @@ check: ## Run code quality tools.
 	@echo "🚀 Linting code: Running pre-commit"
 	@uv run pre-commit run -a
 	@echo "🚀 Static type checking: Running mypy"
-## TODO	@uv run mypy
+
+.PHONY: dep-check
+dep-check: ## Dependency Check
 	@echo "🚀 Checking for obsolete dependencies: Running deptry"
 	@uv run deptry .
 

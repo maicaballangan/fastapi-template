@@ -17,6 +17,8 @@ jobs:
         version: 'latest'
     - name: Install dependencies
       run: make install
+    - name: Run Lint
+      run: make check
     - name: Run tests with code coverage
       run: make test
 
