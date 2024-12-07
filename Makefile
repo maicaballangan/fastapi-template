@@ -33,12 +33,12 @@ dep-check: ## Dependency Check
 .PHONY: test
 test: ## Test the code with pytest
 	@echo "🚀 Testing code: Running pytest"
-	@coverage run --source=app -m pytest -v tests
-	@coverage report -m
+	@uv run coverage run --source=app -m pytest -v tests
+	@uv run coverage report -m
 
 .PHONY: coverage
 coverage: test
-	@coverage html
+	@uv run coverage html
 	@open htmlcov/index.html
 
 .PHONY: build

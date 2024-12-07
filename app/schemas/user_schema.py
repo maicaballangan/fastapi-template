@@ -65,9 +65,6 @@ class BaseUser(BaseProperties):
 class UserOut(BaseUser):
     id: int
 
-    class Config:
-        from_attributes = True
-
 
 # User public output
 class UserOutAdmin(BaseUser):
@@ -76,9 +73,6 @@ class UserOutAdmin(BaseUser):
     is_superuser: bool | None
     invite_token: str | None
     register_token: str | None
-
-    class Config:
-        from_attributes = True
 
 
 class UserDB(BaseUser):
