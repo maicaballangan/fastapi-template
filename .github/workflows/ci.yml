@@ -15,10 +15,13 @@ jobs:
       uses: astral-sh/setup-uv@v4
       with:
         version: 'latest'
+    - name: Activate venv
+      run: | 
+          make venv
+          source .venv/bin/activate
     - name: Install dependencies
       run: make install
     - name: Run Lint
       run: make check
     - name: Run tests with code coverage
       run: make test
-
