@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Email Verification</title>
+    </head>
+<body>
+    <p>Hello {{ name }},</p>
+    <p>Thank you for signing up! To activate your account, please click the verification link below:
+        <br><a href="{{ verify_email_url }}" class="verification-link">Verify Email</a>
+        <p style="font-size: 11px; color: #919191;">Note: The link will expire in {{ expiration_hours }} hours.</p>
+
+    </p>
+            
+    <br>
+    <p>
+        Enjoy,<br>
+        Maica Ballangan
+    </p>
+</body>
+</html>
