@@ -4,7 +4,7 @@ from pydantic import model_validator
 from sqlmodel import Field
 
 
-class BaseProperties(BaseModel):
+class BaseUserInput(BaseModel):
     def create_update_dict(self):
         return self.model_dump(
             exclude_unset=True,
@@ -15,16 +15,14 @@ class BaseProperties(BaseModel):
         return self.model_dump(exclude_unset=True, exclude={'id'})
 
 
-class UserCreate(BaseProperties):
+class UserCreate(BaseUserInput):
     first_name: str = Field(min_length=1, max_length=100)
     last_name: str = Field(min_length=1, max_length=100)
     email: EmailStr = Field(min_length=1, max_length=100)
     password: str = Field(min_length=8, max_length=40)
-    invite_token: str = Field(default=None, max_length=40)
-    register_token: str = Field(default=None, max_length=40)
 
 
-class UserUpdate(BaseProperties):
+class UserUpdate(BaseUserInput):
     first_name: str = Field(default=None, min_length=1, max_length=100)
     last_name: str = Field(default=None, min_length=1, max_length=100)
     email: EmailStr = Field(default=None, max_length=100)
@@ -55,27 +53,20 @@ class ResetPassword(BaseModel):
         return self
 
 
-class BaseUser(BaseProperties):
+class UserOutputPublic(BaseModel):
     first_name: str | None
     last_name: str | None
     email: EmailStr | None = None
 
 
 # User public output
-class UserOut(BaseUser):
+class UserOutput(UserOutputPublic):
     id: int
+    is_active: bool
+    is_superuser: bool
 
 
-# User public output
-class UserOutAdmin(BaseUser):
-    id: int
-    is_active: bool | None
-    is_superuser: bool | None
-    invite_token: str | None
-    register_token: str | None
-
-
-class UserDB(BaseUser):
+class UserDB(UserOutputPublic):
     password: str | None
     is_active: bool | None = True
     is_superuser: bool | None = False

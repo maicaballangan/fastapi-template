@@ -1,12 +1,15 @@
 from contextlib import asynccontextmanager
+from http import HTTPStatus
 
 import sentry_sdk
 from fastapi import FastAPI
+from fastapi import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
 from fastapi.routing import APIRouter
 from fastapi_pagination import add_pagination
-from tortoise import Tortoise
+from tortoise.contrib.fastapi import register_tortoise
+from tortoise.exceptions import DoesNotExist
 
 from app.core.config import settings
 from app.routes import app_router
@@ -23,7 +26,8 @@ if settings.SENTRY_DSN and settings.ENVIRONMENT != 'local':
 
 # setup database
 MODELS = [
-    'app.models.users',
+    'aerich.models',
+    'app.models.user',
 ]
 
 TORTOISE_ORM = {
@@ -40,11 +44,7 @@ TORTOISE_ORM = {
             },
         }
     },
-    'apps': {
-        'askmagna': {
-            'models': MODELS,
-        }
-    },
+    'apps': {'app': {'models': MODELS}},
     'use_tz': False,
     'timezone': 'UTC',
 }
@@ -52,13 +52,12 @@ TORTOISE_ORM = {
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Register Tortoie ORM
-    await Tortoise.init(
-        config=TORTOISE_ORM,
-    )
-    # Generate the schema
-    await Tortoise.generate_schemas()
-    yield
+    # do sth before db inited
+    async with register_tortoise(
+        app,
+        add_exception_handlers=True,
+    ):
+        yield
 
 
 app = FastAPI(
@@ -67,6 +66,7 @@ app = FastAPI(
     generate_unique_id_function=custom_generate_unique_id,
     lifespan=lifespan,
 )
+
 
 # Set all CORS enabled origins
 if settings.all_cors_origins:
@@ -83,5 +83,13 @@ api_router.include_router(app_router.router, tags=['utils'])
 api_router.include_router(auth_router.router, tags=['auth'])
 api_router.include_router(user_router.router, prefix='/users', tags=['users'])
 app.include_router(api_router, prefix=settings.API_V1_STR)
-
 add_pagination(app)
+
+
+# Global Exception
+@app.exception_handler(DoesNotExist)
+async def validation_exception_handler(request, exc):
+    raise HTTPException(
+        status_code=HTTPStatus.NOT_FOUND,
+        detail=HTTPStatus.NOT_FOUND.phrase,
+    )

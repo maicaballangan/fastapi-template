@@ -7,7 +7,7 @@ from app.core.security import create_access_token
 from app.core.security import create_email_token
 from app.core.security import create_refresh_token
 from app.core.security import verify_password
-from app.models.users import User
+from app.models.user import User
 from tests.utils.utils import inactive_user_mock
 from tests.utils.utils import random_lower_string
 

@@ -14,7 +14,7 @@ from app.core.config import settings
 from app.core.security import create_access_token
 from app.core.security import create_refresh_token
 from app.core.security import verify_token
-from app.models.users import User
+from app.models.user import User
 from app.schemas.auth_schema import Token
 
 router = APIRouter()

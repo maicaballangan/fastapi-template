@@ -8,7 +8,7 @@ from app.core.security import create_access_token
 from app.core.security import create_email_token
 from app.core.security import create_refresh_token
 from app.core.security import verify_password
-from app.models.users import User
+from app.models.user import User
 from tests.utils.utils import inactive_user_mock
 from tests.utils.utils import random_email
 from tests.utils.utils import random_lower_string
@@ -155,8 +155,6 @@ async def test_get_all_user(client: AsyncClient, superuser_token_headers: dict[s
         assert 'id' in user
         assert 'is_active' in user
         assert 'is_superuser' in user
-        assert 'invite_token' in user
-        assert 'register_token' in user
 
 
 async def test_get_all_user_forbidden(client: AsyncClient, normaluser_token_headers: dict[str, str]) -> None:
@@ -306,7 +304,7 @@ async def test_user_reset_password_inactive(client: AsyncClient) -> None:
         params={'token': token},
         json={'new_password_1': 'changethis', 'new_password_2': 'changethis'},
     )
-    assert r.status_code == HTTPStatus.BAD_REQUEST
+    assert r.status_code == HTTPStatus.FORBIDDEN
 
 
 async def test_user_reset_password_mismatch(client: AsyncClient) -> None:

@@ -5,7 +5,7 @@ from tortoise import Tortoise
 
 from app.core.config import settings
 from app.main import app
-from app.models.users import User
+from app.models.user import User
 from app.schemas.user_schema import UserDB
 from tests.utils.utils import random_email
 from tests.utils.utils import random_lower_string
@@ -15,7 +15,7 @@ DB_URL = 'sqlite://:memory:'
 
 async def init_db(db_url, create_db: bool = False, schemas: bool = False) -> None:
     """Initial database connection"""
-    await Tortoise.init(db_url=db_url, modules={'models': ['app.models.users']}, _create_db=create_db)
+    await Tortoise.init(db_url=db_url, modules={'models': ['app.models.user']}, _create_db=create_db)
     if create_db:
         print(f'Database created! {db_url = }')
     if schemas:

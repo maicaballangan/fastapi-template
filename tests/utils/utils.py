@@ -1,7 +1,7 @@
 import random
 import string
 
-from app.models.users import User
+from app.models.user import User
 from app.schemas.user_schema import UserDB
 
 
@@ -10,7 +10,7 @@ def random_lower_string() -> str:
 
 
 def random_email() -> str:
-    return f'{random_lower_string()}@gmail.com'
+    return f'{random_lower_string()}@askmagna.com'
 
 
 async def user_mock() -> User:

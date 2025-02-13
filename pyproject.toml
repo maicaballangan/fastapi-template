@@ -11,7 +11,6 @@ dependencies = [
     "pydantic>2.0",
     "emails<1.0,>=0.6",
     "jinja2<4.0.0,>=3.1.4",
-    "alembic<2.0.0,>=1.12.1",
     "httpx<1.0.0,>=0.25.1",
     "sqlmodel<1.0.0,>=0.0.21",
     "pydantic-settings<3.0.0,>=2.2.1",
@@ -20,6 +19,8 @@ dependencies = [
     "tortoise-orm>=0.21.7",
     "fastapi-pagination>=0.12.32",
     "asyncpg>=0.30.0",
+    "aerich>=0.8.1",
+    "tomli-w>=1.2.0",
 ]
 
 [tool.uv]
@@ -34,16 +35,19 @@ dev-dependencies = [
     "deptry>=0.21.1",
 ]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [tool.setuptools]
-py-modules = ["app"]
+py-modules = [
+    "app",
+]
 
 [tool.mypy]
-files = ["app"]
-exclude = ["venv", ".venv", "alembic"]
+files = [
+    "app",
+]
+exclude = [
+    "venv",
+    ".venv",
+]
 strict = true
 disallow_untyped_defs = true
 disallow_any_unimported = true
@@ -55,49 +59,54 @@ show_error_codes = true
 
 [tool.ruff]
 target-version = "py310"
-exclude = ["alembic"]
 indent-width = 4
 line-length = 120
 fix = true
 
 [tool.ruff.lint]
 select = [
-    "YTT",  # flake8-2020
-    "S",    # flake8-bandit
-    "B",    # flake8-bugbear
-    "A",    # flake8-builtins
-    "C4",   # flake8-comprehensions
-    "T10",  # flake8-debugger
-    "SIM",  # flake8-simplify
-    "C90",  # mccabe
-    "E", "W",   # pycodestyle
-    "F",    # pyflakes
-    "PGH",  # pygrep-hooks
-    "UP",   # pyupgrade
-    "RUF",  # ruff
-    "TRY",  # tryceratops
+    "YTT",
+    "S",
+    "B",
+    "A",
+    "C4",
+    "T10",
+    "SIM",
+    "C90",
+    "E",
+    "W",
+    "F",
+    "PGH",
+    "UP",
+    "RUF",
+    "TRY",
 ]
 ignore = [
-    "E501",     # line too long, handled by black
-    "B008",     # do not perform function calls in argument defaults
-    "B904",     # Allow raising exceptions without from e, for HTTPException
-    "PGH003",   # Use specific rule codes when ignoring type issues
-    "A002",     # Argument `id` is shadowing a Python builtin
-    "TRY003",   # Avoid specifying long messages outside the exception class
-    "RUF012",   # Mutable class attributes should be annotated with `typing.ClassVar`
+    "E501",
+    "B008",
+    "B904",
+    "PGH003",
+    "A002",
+    "TRY003",
+    "RUF012",
+    "TRY300",
 ]
+
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101", "S106", "S311"]
+"tests/*" = [
+    "S101",
+    "S106",
+    "S311",
+]
+
+[tool.ruff.lint.pyupgrade]
+keep-runtime-typing = true
 
 [tool.ruff.format]
 preview = true
 quote-style = "single"
 indent-style = "space"
 line-ending = "auto"
-
-[tool.ruff.lint.pyupgrade]
-# Preserve types, even if a file imports `from __future__ import annotations`.
-keep-runtime-typing = true
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -107,4 +116,17 @@ skip_empty = true
 
 [tool.coverage.run]
 branch = true
-source = ["app"]
+source = [
+    "app",
+]
+
+[tool.aerich]
+tortoise_orm = "app.main.TORTOISE_ORM"
+location = "./migrations"
+src_folder = "./."
+
+[build-system]
+requires = [
+    "hatchling",
+]
+build-backend = "hatchling.build"

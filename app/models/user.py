@@ -17,8 +17,6 @@ class User(BaseDBModel):
     is_active = fields.BooleanField(default=False)
     is_staff = fields.BooleanField(default=False)
     is_superuser = fields.BooleanField(default=False)
-    register_token = fields.CharField(max_length=50, null=True)
-    invite_token = fields.CharField(max_length=255, null=True)
 
     def full_name(self) -> str:
         return f"{self.first_name or ''} {self.last_name or ''}".strip()
@@ -51,10 +49,9 @@ class User(BaseDBModel):
         await user.save()
         return user
 
-    class Meta:
-        table = 'accounts_appuser'
-        # ordering = ["-created", "id"]
-
     class PydanticMeta:
         computed = ['full_name']
         exclude = ['created', 'modified']
+
+    class Meta:
+        table = 'accounts_appuser'

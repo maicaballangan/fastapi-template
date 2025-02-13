@@ -1,6 +1,4 @@
-# FastAPI Project - Backend
-
-This is a FastAPI project template that with Tortoise ORM, Pydantic data validation, alembic migration, and other useful tools like ruff for linting, and pytest + coverage for testing.
+# FastAPI Template
 
 ```
 .
@@ -8,7 +6,7 @@ This is a FastAPI project template that with Tortoise ORM, Pydantic data validat
 │   ├── core                        - core classes
 │   ├── email-templates             - email templates
 │   ├── models                      - tortoise models
-│   │   ├── users.py
+│   │   ├── user.py
 │   │   └── ...
 │   ├── routes                      - api routers
 │   │   ├── app_router.py
@@ -27,33 +25,46 @@ This is a FastAPI project template that with Tortoise ORM, Pydantic data validat
 ├── Dockerfile          
 ├── Makefile                        - build automation
 └── README.md
-
 ```
+
 ## Requirements
 
-* [Docker](https://www.docker.com/): 
-* [uv](https://docs.astral.sh/uv/) package and env management: `brew install uv`
-* [make](https://formulae.brew.sh/formula/make) build automation tool: `brew install make`
+* [Docker](https://www.docker.com/).
+* [uv](https://docs.astral.sh/uv/) for Python package and environment management.
+* [make](https://formulae.brew.sh/formula/make) build automation tool
 
 
-## Build Automation
-For build automation, we will be using `make`.
-See [makefile](Makefile) for actual commands.
+Note: See [makefile](Makefile) for build automation commands
+
+## Docker Deployment
+```sh
+sudo docker compose up
+```
+
+## Access
+http://localhost:8001/docs
 
 
-## Database
+## Development
+
+### Database Config
 
 Install brew postgresql and configures initial database:
 ```sh
 make db-config
 ```
 
-## Development
+### Setup
 
-Create and activate Virtual Env:
+Create and activate virtual env:
 ```sh
 make venv
 source .venv/bin/activate
+```
+
+Copy env and add necessary variables:
+```sh
+cp .env.local .env
 ```
 
 Install all dependencies:
@@ -65,14 +76,6 @@ Run dev server with live reload:
 ```sh
 make dev
 ```
-
-## Linting
-
-Run checks and pre-commit hooks:
-```sh
-make check
-```
-Note: Check and fix issues before you commit or else pre-commit hook will fail.
 
 ## Testing
 
@@ -89,6 +92,12 @@ make coverage
 ```
 Note: Make sure coverage is at least 90%
 
+## Lint Fix
+
+Check and fix issues before you commit or else pre-commit hook will fail:
+```sh
+make fix
+```
 
 ## Other useful commands
 

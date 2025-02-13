@@ -3,7 +3,7 @@ from http import HTTPStatus
 from fastapi import APIRouter
 from fastapi import HTTPException
 from fastapi_pagination import Page
-from fastapi_pagination import paginate
+from fastapi_pagination.ext.tortoise import paginate
 
 from app.core import emails
 from app.core.authentication import CurrentUser
@@ -12,18 +12,18 @@ from app.core.authentication import UserFromEmailToken
 from app.core.config import settings
 from app.core.security import get_password_hash
 from app.core.security import verify_password
-from app.models.users import User
+from app.models.user import User
 from app.schemas.user_schema import ResetPassword
 from app.schemas.user_schema import UpdatePassword
 from app.schemas.user_schema import UserCreate
-from app.schemas.user_schema import UserOut
-from app.schemas.user_schema import UserOutAdmin
+from app.schemas.user_schema import UserOutput
+from app.schemas.user_schema import UserOutputPublic
 from app.schemas.user_schema import UserUpdate
 
 router = APIRouter()
 
 
-@router.post('/register', response_model=UserOut, status_code=HTTPStatus.CREATED, tags=['users'])
+@router.post('/register', response_model=UserOutput, status_code=HTTPStatus.CREATED)
 async def register_user(
     *,
     user_in: UserCreate,
@@ -51,7 +51,7 @@ async def register_user(
     return user
 
 
-@router.get('/current', response_model=UserOut, status_code=HTTPStatus.OK, tags=['users'])
+@router.get('/current', response_model=UserOutputPublic, status_code=HTTPStatus.OK)
 def get_current_user(
     current_user: CurrentUser,
 ):
@@ -61,7 +61,7 @@ def get_current_user(
     return current_user
 
 
-@router.put('/current/password', status_code=HTTPStatus.NO_CONTENT, tags=['users'])
+@router.put('/current/password', status_code=HTTPStatus.NO_CONTENT)
 async def update_current_user_password(user_in: UpdatePassword, current_user: CurrentUser):
     """
     Update own password.
@@ -73,7 +73,7 @@ async def update_current_user_password(user_in: UpdatePassword, current_user: Cu
     await current_user.save()
 
 
-@router.put('/current', response_model=UserOut, status_code=HTTPStatus.OK, tags=['users'])
+@router.put('/current', response_model=UserOutputPublic, status_code=HTTPStatus.OK)
 async def update_current_user(user_in: UserUpdate, current_user: CurrentUser):
     """
     Update own user.
@@ -81,7 +81,7 @@ async def update_current_user(user_in: UserUpdate, current_user: CurrentUser):
     return await User.update(current_user, user_in)
 
 
-@router.delete('/current', status_code=HTTPStatus.ACCEPTED, tags=['users'])
+@router.delete('/current', status_code=HTTPStatus.ACCEPTED)
 async def remove_current_user(current_user: CurrentUser):
     """
     Create deactivate email
@@ -101,9 +101,8 @@ async def remove_current_user(current_user: CurrentUser):
 @router.get(
     '',
     dependencies=[SuperUser],
-    response_model=Page[UserOutAdmin],
+    response_model=Page[UserOutput],
     status_code=HTTPStatus.OK,
-    tags=['users'],
 )
 async def get_all_user(
     limit: int = 100,
@@ -112,16 +111,15 @@ async def get_all_user(
     """
     Retrieve users.
     """
-    users = await User.all().limit(limit).offset(offset)
-    return paginate(users)
+    query = User.all().limit(limit).offset(offset)
+    return await paginate(query)
 
 
 @router.get(
     '/{id}',
     dependencies=[SuperUser],
-    response_model=UserOutAdmin,
+    response_model=UserOutput,
     status_code=HTTPStatus.OK,
-    tags=['users'],
 )
 async def get_user(
     id: int,
@@ -129,21 +127,14 @@ async def get_user(
     """
     Get a specific user by id.
     """
-    user = await User.get_or_none(id=id)
-    if not user:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail=HTTPStatus.NOT_FOUND.phrase,
-        )
-    return user
+    return await User.get(id=id)
 
 
 @router.post(
     '',
     dependencies=[SuperUser],
-    response_model=UserOutAdmin,
+    response_model=UserOutput,
     status_code=HTTPStatus.CREATED,
-    tags=['users'],
 )
 async def create_user(*, user_in: UserCreate):
     """
@@ -165,9 +156,8 @@ async def create_user(*, user_in: UserCreate):
 @router.put(
     '/{id}',
     dependencies=[SuperUser],
-    response_model=UserOut,
+    response_model=UserOutput,
     status_code=HTTPStatus.OK,
-    tags=['users'],
 )
 async def update_user(
     id: int,
@@ -176,9 +166,7 @@ async def update_user(
     """
     Update a user.
     """
-    user = await User.get_or_none(id=id)
-    if not user:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=HTTPStatus.NOT_FOUND.phrase)
+    user = await User.get(id=id)
     if user_in.email:
         user_in.email = user_in.email.lower()
         existing = await User.get_by_email(email=user_in.email)
@@ -195,18 +183,12 @@ async def update_user(
     '/{id}',
     dependencies=[SuperUser],
     status_code=HTTPStatus.NO_CONTENT,
-    tags=['users'],
 )
 async def remove_user(id: int):
     """
     Delete a user
     """
-    user = await User.get_or_none(id=id)
-    if not user:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail=HTTPStatus.NOT_FOUND.phrase,
-        )
+    user = await User.get(id=id)
     await user.delete()
 
 
@@ -239,14 +221,14 @@ async def user_reset_password(body: ResetPassword, user: UserFromEmailToken):
     Reset password
     """
     if user.is_active is False:
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail='Inactive user')
+        raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail=HTTPStatus.FORBIDDEN.phrase)
     hashed_password = get_password_hash(password=body.new_password_1)
     user.password = hashed_password
 
     await user.save()
 
 
-@router.post('/verify-delete', status_code=HTTPStatus.NO_CONTENT, tags=['users'])
+@router.post('/verify-delete', status_code=HTTPStatus.NO_CONTENT)
 async def user_verify_delete(user: UserFromEmailToken):
     """
     Deactivate user

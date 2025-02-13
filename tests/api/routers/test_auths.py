@@ -6,7 +6,7 @@ from app.core.config import settings
 from app.core.security import create_access_token
 from app.core.security import create_email_token
 from app.core.security import create_refresh_token
-from app.models.users import User
+from app.models.user import User
 from tests.utils.utils import random_lower_string
 from tests.utils.utils import user_mock
 
@@ -34,16 +34,16 @@ async def test_login_access_token_incorrect_email(client: AsyncClient) -> None:
 
 async def test_refresh(client: AsyncClient) -> None:
     user = await user_mock()
-    refrest_token = create_refresh_token(user.id)
-    r = await client.post(f'{settings.API_V1_STR}/login/refresh', cookies={'refresh_token': refrest_token})
+    refresh_token = create_refresh_token(user.id)
+    r = await client.post(f'{settings.API_V1_STR}/login/refresh', cookies={'refresh_token': refresh_token})
 
     assert r.status_code == HTTPStatus.OK
     assert r.json()['access_token']
 
 
 async def test_refresh_nonexisting(client: AsyncClient) -> None:
-    refrest_token = create_refresh_token(1234)
-    r = await client.post(f'{settings.API_V1_STR}/login/refresh', cookies={'refresh_token': refrest_token})
+    refresh_token = create_refresh_token(1234)
+    r = await client.post(f'{settings.API_V1_STR}/login/refresh', cookies={'refresh_token': refresh_token})
     assert r.status_code == HTTPStatus.UNAUTHORIZED
 
 
@@ -53,22 +53,22 @@ async def test_refresh_no_token(client: AsyncClient) -> None:
 
 
 async def test_refresh_no_sub(client: AsyncClient) -> None:
-    refrest_token = create_refresh_token(None)
-    r = await client.post(f'{settings.API_V1_STR}/login/refresh', cookies={'refresh_token': refrest_token})
+    refresh_token = create_refresh_token(None)
+    r = await client.post(f'{settings.API_V1_STR}/login/refresh', cookies={'refresh_token': refresh_token})
     assert r.status_code == HTTPStatus.UNAUTHORIZED
 
 
 async def test_refresh_wrong_payload(client: AsyncClient) -> None:
     user = await user_mock()
-    refrest_token = create_access_token(user.id)
-    r = await client.post(f'{settings.API_V1_STR}/login/refresh', cookies={'refresh_token': refrest_token})
+    refresh_token = create_access_token(user.id)
+    r = await client.post(f'{settings.API_V1_STR}/login/refresh', cookies={'refresh_token': refresh_token})
     assert r.status_code == HTTPStatus.UNAUTHORIZED
 
 
 async def test_refresh_wrong_payload1(client: AsyncClient) -> None:
     user = await user_mock()
-    refrest_token = create_email_token(user.email)
-    r = await client.post(f'{settings.API_V1_STR}/login/refresh', cookies={'refresh_token': refrest_token})
+    refresh_token = create_email_token(user.email)
+    r = await client.post(f'{settings.API_V1_STR}/login/refresh', cookies={'refresh_token': refresh_token})
     assert r.status_code == HTTPStatus.UNAUTHORIZED
 
 

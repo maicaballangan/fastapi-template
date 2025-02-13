@@ -7,7 +7,7 @@ from app.core.config import settings
 from app.core.emails import generate_reset_password_email
 from app.core.emails import generate_verification_email
 from app.core.emails import send_email
-from app.models.users import User
+from app.models.user import User
 from app.schemas.auth_schema import Email
 from app.schemas.auth_schema import Message
 

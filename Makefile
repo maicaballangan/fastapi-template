@@ -17,8 +17,8 @@ install: ## Install the pre-commit hooks
 	@uv sync
 	@uv run pre-commit install
 
-.PHONY: check
-check: ## Run code quality tools.
+.PHONY: fix
+fix: ## Run code quality tools.
 	@echo "🚀 Checking lock file consistency with 'pyproject.toml'"
 	@uv lock --locked
 	@echo "🚀 Linting code: Running pre-commit"
@@ -54,7 +54,7 @@ clean-build: ## Clean build artifacts
 .PHONY: dev
 dev:
 	@echo "🚀 Starting dev with live reload"
-	@uv run fastapi dev
+	@uv run fastapi dev --port 8001
 
 .PHONY: help
 help:

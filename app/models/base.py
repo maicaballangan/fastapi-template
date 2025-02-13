@@ -9,3 +9,18 @@ class BaseDBModel(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['-created', 'id']
+
+    class PydanticMeta:
+        exclude = ['created', 'modified']
+
+
+class BaseAuditedDBModel(BaseDBModel):
+    created_by = fields.BigIntField()
+
+    class Meta:
+        abstract = True
+        ordering = ['-created']
+
+    class PydanticMeta:
+        exclude = ['created', 'modified', 'created_by']

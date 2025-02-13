@@ -9,3 +9,4 @@ htmlcov
 .cache
 .venv
 .env
+.DS_STORE
