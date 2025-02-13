@@ -54,4 +54,4 @@ class User(BaseDBModel):
         exclude = ['created', 'modified']
 
     class Meta:
-        table = 'accounts_appuser'
+        table = 'user'
