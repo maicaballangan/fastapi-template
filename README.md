@@ -54,7 +54,7 @@ make db-config-linux # for linux
 
 Create and activate virtual env:
 ```sh
-python3 -m venv .venv
+make venv
 source .venv/bin/activate
 ```
 

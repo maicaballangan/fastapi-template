@@ -2,7 +2,6 @@
 venv: ## Install the virtual environment
 	@echo "🚀 Creating virtual environment using uv"
 	@python3.11 -m venv .venv
-	@source .venv/bin/activate
 
 .PHONY: install
 install: ## Install tools and other dependencies
