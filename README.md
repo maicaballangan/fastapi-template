@@ -28,20 +28,16 @@
 ```
 
 ## Requirements
-* [brew](https://brew.sh/) - Package Manager for macOS (or Linux)
-* [make](https://formulae.brew.sh/formula/make) - build automation tool
-* Python 3.11 - `brew install python@3.11`
+* [Python 3.11](https://www.python.org/downloads/release/python-3110/)
+* [brew](https://brew.sh/) - Package Manager for macOS and Linux
+* [make](https://formulae.brew.sh/formula/make) - Build automation tool for macOS and Linux
 * [uv](https://docs.astral.sh/uv/) for Python package and environment management
 
-
+    
 ```sh
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-brew install python@3.11
-brew install make
-brew install uv
+make install
 ```
-Note: See [makefile](Makefile) for build automation commands
+See [makefile](Makefile) for build automation commands
 
 
 ## Development
@@ -50,7 +46,8 @@ Note: See [makefile](Makefile) for build automation commands
 
 Install brew postgresql and configures initial database:
 ```sh
-make db-config
+make db-config # MacOS
+make db-config-linux # for linux
 ```
 
 ### Setup
@@ -66,9 +63,9 @@ Copy env and add necessary variables:
 cp .env.local .env
 ```
 
-Install all dependencies:
+Install/sync dependencies:
 ```sh
-make install
+make dependencies
 ```
 
 Run dev server with live reload:

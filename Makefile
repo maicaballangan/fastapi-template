@@ -7,12 +7,9 @@ venv: ## Install the virtual environment
 .PHONY: install
 install: ## Install tools and other dependencies
 	@echo "🚀 Creating virtual environment using uv"
-	@/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	@brew install python@3.11
 	@brew install make
 	@brew install uv
-	@brew install postgresql
-	@uv run pre-commit install
 
 .PHONY: db-config
 db-config: ## Initialize database
@@ -22,9 +19,20 @@ db-config: ## Initialize database
 	@createuser -s postgres
 	@createdb postgres
 
+.PHONY: db-config-linux
+db-config-linux: ## Initialize database on Linux
+	@echo "🚀 Initializing database"
+	@sudo apt-get update
+	@sudo apt-get install postgresql
+	@sudo service postgresql start
+	@createuser -s postgres
+	@createdb postgres
+
+
 .PHONY: dependencies
 dependencies: ## Download dependencies
 	@uv sync
+	@uv run pre-commit install
 	
 .PHONY: check
 check:
