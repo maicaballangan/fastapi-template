@@ -28,15 +28,16 @@
 ```
 
 ## Requirements
-* [Python 3.11](https://www.python.org/downloads/release/python-3110/)
 * [brew](https://brew.sh/) - Package Manager for macOS and Linux
 * [make](https://formulae.brew.sh/formula/make) - Build automation tool for macOS and Linux
-* [uv](https://docs.astral.sh/uv/) for Python package and environment management
-
+* [Python 3.11](https://www.python.org/downloads/release/python-3110/)
+* [uv](https://docs.astral.sh/uv/) Package Manager for python
+* Postgres
     
 ```sh
 make install
 ```
+
 See [makefile](Makefile) for build automation commands
 
 

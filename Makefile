@@ -1,14 +1,14 @@
-.PHONY: venv
-venv: ## Install the virtual environment
-	@echo "🚀 Creating virtual environment using uv"
-	@python3.11 -m venv .venv
-
 .PHONY: install
 install: ## Install tools and other dependencies
 	@echo "🚀 Creating virtual environment using uv"
-	@brew install python@3.11
 	@brew install make
+	@brew install python@3.11
 	@brew install uv
+
+.PHONY: venv
+venv: ## Install the virtual environment
+	@echo "🚀 Creating virtual environment using uv"
+	@uv venv --python 3.11
 
 .PHONY: db-config
 db-config: ## Initialize database
