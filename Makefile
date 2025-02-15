@@ -1,35 +1,11 @@
-.PHONY: install
-install: ## Install tools and other dependencies
-	@echo "🚀 Creating virtual environment using uv"
-	@brew install make
-	@brew install python@3.11
-	@brew install uv
-
 .PHONY: venv
 venv: ## Install the virtual environment
 	@echo "🚀 Creating virtual environment using uv"
 	@uv venv --python 3.11
 
-.PHONY: db-config
-db-config: ## Initialize database
-	@echo "🚀 Initializing database"
-	@brew install postgresql
-	@brew services start postgresql
-	@createuser -s postgres
-	@createdb postgres
 
-.PHONY: db-config-linux
-db-config-linux: ## Initialize database on Linux
-	@echo "🚀 Initializing database"
-	@sudo apt-get update
-	@sudo apt-get install postgresql
-	@sudo service postgresql start
-	@createuser -s postgres
-	@createdb postgres
-
-
-.PHONY: dependencies
-dependencies: ## Download dependencies
+.PHONY: install
+install: ## Download dependencies
 	@uv sync
 	@uv run pre-commit install
 

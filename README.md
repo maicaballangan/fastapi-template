@@ -35,23 +35,37 @@
 * Postgres
 
 ```sh
-make install
+brew install make
+brew install python@3.11
+brew install uv
+brew install postgresql
 ```
-
-See [makefile](Makefile) for build automation commands
-
 
 ## Development
 
 ### Database Config
 
-Install brew postgresql and configures initial database:
+Install postgresql:
 ```sh
-make db-config # MacOS
-make db-config-linux # for linux
+# Mac
+brew install postgresql
+brew services start postgresql
+
+# Linux
+sudo apt-get update
+sudo apt-get install postgresql
+sudo service postgresql start
+```
+
+Configure database:
+```sh
+createuser -s postgres
+psql -U postgres -f data/create_superuser.sql
 ```
 
 ### Setup
+
+Note: See [makefile](Makefile) for build automation commands
 
 Create and activate virtual env:
 ```sh
@@ -66,7 +80,7 @@ cp .env.local .env
 
 Install/sync dependencies:
 ```sh
-make dependencies
+make install
 ```
 
 Run dev server with live reload:
