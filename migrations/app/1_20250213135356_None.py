@@ -9,7 +9,7 @@ async def upgrade(db: BaseDBAsyncClient) -> str:
     "app" VARCHAR(100) NOT NULL,
     "content" JSONB NOT NULL
 );
-CREATE TABLE IF NOT EXISTS "accounts_appuser" (
+CREATE TABLE IF NOT EXISTS "user" (
     "id" BIGSERIAL NOT NULL PRIMARY KEY,
     "email" VARCHAR(100) NOT NULL UNIQUE,
     "first_name" VARCHAR(100) NOT NULL,

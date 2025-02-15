@@ -26,5 +26,3 @@ jobs:
       run: make check
     - name: Run tests with code coverage
       run: make test
-
-      

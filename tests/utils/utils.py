@@ -10,7 +10,7 @@ def random_lower_string() -> str:
 
 
 def random_email() -> str:
-    return f'{random_lower_string()}@askmagna.com'
+    return f'{random_lower_string()}@test.com'
 
 
 async def user_mock() -> User:

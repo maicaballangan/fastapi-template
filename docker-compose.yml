@@ -15,7 +15,7 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
-      - POSTGRES_DB=lawyersdb
+      - POSTGRES_DB=postgres
 
 
   backend:

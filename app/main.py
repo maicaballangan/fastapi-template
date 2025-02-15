@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
 from fastapi.routing import APIRouter
 from fastapi_pagination import add_pagination
-from tortoise.contrib.fastapi import register_tortoise
+from tortoise import Tortoise
 from tortoise.exceptions import DoesNotExist
 
 from app.core.config import settings
@@ -52,12 +52,14 @@ TORTOISE_ORM = {
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # do sth before db inited
-    async with register_tortoise(
-        app,
-        add_exception_handlers=True,
-    ):
-        yield
+    # Register Tortoise ORM
+    await Tortoise.init(
+        config=TORTOISE_ORM,
+    )
+
+    # Generate the schema
+    await Tortoise.generate_schemas()  # TODO remove for production
+    yield
 
 
 app = FastAPI(
@@ -77,6 +79,7 @@ if settings.all_cors_origins:
         allow_methods=['*'],
         allow_headers=['*'],
     )
+
 
 api_router = APIRouter()
 api_router.include_router(app_router.router, tags=['utils'])

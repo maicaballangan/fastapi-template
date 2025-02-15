@@ -1,7 +1,18 @@
 .PHONY: venv
 venv: ## Install the virtual environment
 	@echo "🚀 Creating virtual environment using uv"
-	@uv venv --python 3.10
+	@python3.11 -m venv .venv
+	@source .venv/bin/activate
+
+.PHONY: install
+install: ## Install tools and other dependencies
+	@echo "🚀 Creating virtual environment using uv"
+	@/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	@brew install python@3.11
+	@brew install make
+	@brew install uv
+	@brew install postgresql
+	@uv run pre-commit install
 
 .PHONY: db-config
 db-config: ## Initialize database
@@ -9,13 +20,17 @@ db-config: ## Initialize database
 	@brew install postgresql
 	@brew services start postgresql
 	@createuser -s postgres
-	@createdb lawyersdb
+	@createdb postgres
 
-.PHONY: install
-install: ## Install the pre-commit hooks
-	@echo "🚀 Creating virtual environment using uv"
+.PHONY: dependencies
+dependencies: ## Download dependencies
 	@uv sync
-	@uv run pre-commit install
+	
+.PHONY: check
+check:
+	@echo "🚀 Linting code: Running Ruff lint and format check"
+	@ruff check app
+	@ruff format app --check
 
 .PHONY: fix
 fix: ## Run code quality tools.
@@ -23,7 +38,7 @@ fix: ## Run code quality tools.
 	@uv lock --locked
 	@echo "🚀 Linting code: Running pre-commit"
 	@uv run pre-commit run -a
-	@echo "🚀 Static type checking: Running mypy"
+##  @echo "🚀 Static type checking: Running mypy"
 
 .PHONY: dep-check
 dep-check: ## Dependency Check

@@ -28,21 +28,20 @@
 ```
 
 ## Requirements
+* [brew](https://brew.sh/) - Package Manager for macOS (or Linux)
+* [make](https://formulae.brew.sh/formula/make) - build automation tool
+* Python 3.11 - `brew install python@3.11`
+* [uv](https://docs.astral.sh/uv/) for Python package and environment management
 
-* [Docker](https://www.docker.com/).
-* [uv](https://docs.astral.sh/uv/) for Python package and environment management.
-* [make](https://formulae.brew.sh/formula/make) build automation tool
 
-
-Note: See [makefile](Makefile) for build automation commands
-
-## Docker Deployment
 ```sh
-sudo docker compose up
-```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-## Access
-http://localhost:8001/docs
+brew install python@3.11
+brew install make
+brew install uv
+```
+Note: See [makefile](Makefile) for build automation commands
 
 
 ## Development
@@ -58,7 +57,7 @@ make db-config
 
 Create and activate virtual env:
 ```sh
-make venv
+python3 -m venv .venv
 source .venv/bin/activate
 ```
 
@@ -76,6 +75,13 @@ Run dev server with live reload:
 ```sh
 make dev
 ```
+
+## Access
+http://localhost:8001/docs
+
+username: admin@test.com
+password: Admin12#
+
 
 ## Testing
 
