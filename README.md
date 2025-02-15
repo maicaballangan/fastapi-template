@@ -100,7 +100,7 @@ Note: Make sure coverage is at least 90%
 
 Check and fix issues before you commit or else pre-commit hook will fail:
 ```sh
-make fix
+make lint
 ```
 
 ## Other useful commands

@@ -32,15 +32,9 @@ db-config-linux: ## Initialize database on Linux
 dependencies: ## Download dependencies
 	@uv sync
 	@uv run pre-commit install
-	
-.PHONY: check
-check:
-	@echo "🚀 Linting code: Running Ruff lint and format check"
-	@ruff check app
-	@ruff format app --check
 
-.PHONY: fix
-fix: ## Run code quality tools.
+.PHONY: lint
+lint: ## Run code quality tools.
 	@echo "🚀 Checking lock file consistency with 'pyproject.toml'"
 	@uv lock --locked
 	@echo "🚀 Linting code: Running pre-commit"
