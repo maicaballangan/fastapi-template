@@ -33,7 +33,7 @@
 * [Python 3.11](https://www.python.org/downloads/release/python-3110/)
 * [uv](https://docs.astral.sh/uv/) Package Manager for python
 * Postgres
-    
+
 ```sh
 make install
 ```

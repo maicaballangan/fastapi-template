@@ -10,7 +10,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
-        python-version: '3.10'
+        python-version: '3.11'
     - name: Install the latest version of uv
       uses: astral-sh/setup-uv@v4
       with:
@@ -20,8 +20,8 @@ jobs:
           make venv
           source .venv/bin/activate
           cp .env.local .env
-    - name: Install dependencies
-      run: make install
+    - name: Sync dependencies
+      run: make dependencies
     - name: Run Lint
       run: make check
     - name: Run tests with code coverage
